@@ -10,7 +10,10 @@
                 "object": {
                     "property": [
                         {"@name": "name", "string": "Albert Einstein"},
-                        {"@name": "goodreads_link", "string": "/author/show/9810.Albert_Einstein",},
+                        {
+                            "@name": "goodreads_link",
+                            "string": "/author/show/9810.Albert_Einstein",
+                        },
                         {"@name": "slug", "string": "Albert-Einstein"},
                     ]
                 },

@@ -14,8 +14,16 @@ load_dotenv()
 class QuoteSpider(scrapy.Spider):
     name = "quotes"
     start_urls = [os.getenv("INPUT_URL")]
-    proxy = os.getenv("PROXY")
-    output_file = os.getenv("OUTPUT_FILE")
+    proxy = "http://" + os.getenv("PROXY")
+
+    def start_requests(self):
+        for url in self.start_urls:
+            # according to docs [https://docs.scrapy.org/en/latest/topics/downloader-middleware.html#scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware]
+            # this is the correct way of using a proxy but it produces Error 407
+            yield scrapy.Request(
+                url=url,
+                callback=self.parse,  # meta={"proxy": self.proxy}
+            )
 
     def parse(self, response):
         js = response.css("script::text").get()
@@ -37,10 +45,7 @@ class QuoteSpider(scrapy.Spider):
                     name = [
                         dictionary.get("string", "")
                         for dictionary in author_properties
-                        if dictionary.get(
-                            "@name",
-                        )
-                        == "name"
+                        if dictionary.get("@name", "") == "name"
                     ][0]
                     result["by"] = name
                 if property.get("@name") == "tags":
