@@ -1,0 +1,4 @@
+.env
+.sigmoidal/
+**/__pycache__/
+response.html
